@@ -1,1 +1,1 @@
-# AWS lambda cicd via jenkins
+# AWS lambda CI/CD via jenkins
