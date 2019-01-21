@@ -16,11 +16,9 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		println "rootDir :: ${rootDir}"
 
 		stage('Build') {
-			
-
 			container('maven') {
 				sh "mvn --version"
-				sh "mvn package"
+				sh "mvn clean package"
 			}
 		}
 
