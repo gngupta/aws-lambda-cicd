@@ -26,7 +26,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		stage('Build') {
 			container('maven') {
 				sh "mvn --version"
-				sh "mvn clean package -D.commitId=-ajdhdgfi"
+				sh "mvn clean package -DcommitId=-${commitId}"
 			}
 		}
 
