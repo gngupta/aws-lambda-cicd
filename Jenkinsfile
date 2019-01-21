@@ -12,9 +12,15 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 			checkout scm
 		}
 
+		def rootDir = pwd()
+		println "rootDir :: ${rootDir}"
+
 		stage('Build') {
+			
+
 			container('maven') {
 				sh "mvn --version"
+				sh "mvn package"
 			}
 		}
 
