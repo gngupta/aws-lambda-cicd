@@ -3,8 +3,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.amazonaws.lambda</groupId>
   <artifactId>AWSLambdaCICD</artifactId>
-  <version>1.0.0</version>
+  <version>1.0</version>
   <build>
+    <finalName>${artifactId}-${version}${commitId}</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -75,5 +76,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+  <properties />
 </project>
 

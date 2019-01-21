@@ -1,5 +1,12 @@
 #!/usr/bin/groovy
 
+def getCommitId() {
+    sh 'git rev-parse --short HEAD > .git/commitId'
+    def commitId = readFile('.git/commitId').trim()
+    sh 'rm .git/commitId'
+    return commitId
+}
+
 podTemplate(label: 'jenkins-pipeline', containers: [
 		containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:3.27-1-alpine', args: '${computer.jnlpmac} ${computer.name}', workingDir: '/home/jenkins', resourceRequestCpu: '200m', resourceLimitCpu: '300m', resourceRequestMemory: '256Mi', resourceLimitMemory: '512Mi'),
 		containerTemplate(name: 'maven', image: 'maven:3.5.2-jdk-8-alpine', command: 'cat', ttyEnabled: true),
@@ -13,12 +20,13 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		}
 
 		def rootDir = pwd()
-		println "rootDir :: ${rootDir}"
+		def commitId = getCommitId()
+		println "rootDir :: ${rootDir} commitId :: ${commitId}"
 
 		stage('Build') {
 			container('maven') {
 				sh "mvn --version"
-				sh "mvn clean package"
+				sh "mvn clean package -D.commitId=-${commitId}"
 			}
 		}
 
