@@ -32,7 +32,6 @@ public class LambdaFunctionHandlerTest {
     public void testLambdaFunctionHandler() {
         LambdaFunctionHandler handler = new LambdaFunctionHandler();
         Context ctx = createContext();
-
         String output = handler.handleRequest("gorakh", ctx);
         Assert.assertEquals(CONTENT_TYPE, output);
     }
