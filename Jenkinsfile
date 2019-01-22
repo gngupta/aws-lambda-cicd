@@ -34,22 +34,22 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 			return;
 		}
 
+		def artifactName = "${config.lambdaConfigs.name}-${commitId}"
 
 		stage('Build') {
 			container('maven') {
 				sh "mvn --version"
-				sh "mvn clean package -DartifactName=${config.lambdaConfigs.name}-${commitId} --batch-mode"
+				sh "mvn clean package -DartifactName=${artifactName} --batch-mode"
 			}
 		}
 
 		stage('Push') {
 			container('aws') {
 				withAWS(credentials:'aws-lambda-cicd') {
-					sh "aws --version"
+					s3Upload(file:'${artifactName}.jar', bucket:'${config.lambdaConfigs.s3Bucket}', path:'${rootDir}/target/${artifactName}.jar')
 				}
 			}
 		}
-
 		stage('Deploy') {
 			container('aws') {
 				sh "aws --version"
