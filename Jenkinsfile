@@ -38,7 +38,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		stage('Build') {
 			container('maven') {
 				sh "mvn --version"
-				sh "mvn clean package -DartifactName=-${config.lambdaConfigs.name}${commitId}"
+				sh "mvn clean package -DartifactName=${config.lambdaConfigs.name}-${commitId}"
 			}
 		}
 
