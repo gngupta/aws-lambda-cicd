@@ -53,7 +53,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		}
 		stage('Deploy') {
 			container('aws') {
-				withAWS(credentials: credentials: config.lambdaConfigs.credentialId) {
+				withAWS(credentials: config.lambdaConfigs.credentialId) {
 					sh "aws --version";
 				}
 			}
