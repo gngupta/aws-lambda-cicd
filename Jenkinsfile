@@ -27,7 +27,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		def pipelineUtil = load "${rootDir}/PipelineUtil.groovy"
 		def inputFile = readFile('Jenkinsfile.json')
 		def config = new groovy.json.JsonSlurperClassic().parseText(inputFile)
-		println "Pipeline config ==> ${config}
+		println "Pipeline config ==> ${config}"
 
 		if(!config.pipeline.enabled){
 			println "Pipeline is not enabled in Jenkinsfile.json"
