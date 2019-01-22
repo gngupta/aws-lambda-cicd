@@ -1,10 +1,10 @@
 #!/usr/bin/groovy
 
 def getCommitId() {
-    sh 'git rev-parse --short HEAD > .git/commitId'
-    def commitId = readFile('.git/commitId').trim()
-    sh 'rm .git/commitId'
-    return commitId
+	sh 'git rev-parse --short HEAD > .git/commitId'
+	def commitId = readFile('.git/commitId').trim()
+		sh 'rm .git/commitId'
+		return commitId
 }
 
 podTemplate(label: 'jenkins-pipeline', containers: [
@@ -14,7 +14,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 	]) {
 
 	node('jenkins-pipeline') {
-		
+
 		stage('Checkout') {
 			checkout scm
 		}
@@ -23,10 +23,22 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		def commitId = getCommitId()
 		println "rootDir :: ${rootDir} commitId :: ${commitId}"
 
+		// Read required jenkins workflow configuration values
+		def pipelineUtil = load "${rootDir}/PipelineUtil.groovy"
+		def inputFile = readFile('Jenkinsfile.json')
+		def config = new groovy.json.JsonSlurperClassic().parseText(inputFile)
+		println "Pipeline config ==> ${config}
+
+		if(!config.pipeline.enabled){
+			println "Pipeline is not enabled in Jenkinsfile.json"
+			return;
+		}
+
+
 		stage('Build') {
 			container('maven') {
 				sh "mvn --version"
-				sh "mvn clean package -DcommitId=-${commitId}"
+				sh "mvn clean package -DartifactName=-${config.lambdaConfigs.name}${commitId}"
 			}
 		}
 

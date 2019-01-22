@@ -1,0 +1,9 @@
+{
+  "lambdaConfigs": {
+    "name": "AWSLambdaCICD",
+    "s3Bucket": "AWSLambdaCICD-store"
+  },
+  "pipeline": {
+    "enabled": false
+  }
+}

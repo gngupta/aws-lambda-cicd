@@ -8,11 +8,11 @@
   <packaging>jar</packaging>
 
   <properties>
-    <commitId></commitId>
+    <artifactName></artifactName>
   </properties>
 
   <build>
-    <finalName>${artifactId}-${version}${commitId}</finalName>
+    <finalName>${artifactName}</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
