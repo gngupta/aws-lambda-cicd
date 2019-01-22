@@ -46,7 +46,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		stage('Push') {
 			container('aws') {
 				withAWS(credentials:'aws-lambda-cicd') {
-					s3Upload(file: artifactName + '.jar',  bucket: config.lambdaConfigs.s3Bucket, path: '')
+					s3Upload(file: rootDir + '/target/' +artifactName + '.jar',  bucket: config.lambdaConfigs.s3Bucket, path: '')
 				}
 			}
 		}
