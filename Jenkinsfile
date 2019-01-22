@@ -29,7 +29,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		def config = new groovy.json.JsonSlurperClassic().parseText(inputFile)
 		println "Pipeline config ==> ${config}"
 
-		if(!config.pipeline.enabled){
+		if (!config.pipeline.enabled) {
 			println "Pipeline is not enabled in Jenkinsfile.json"
 			return;
 		}
@@ -44,15 +44,18 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		}
 
 		stage('Push') {
-			container('aws') {
-				withAWS(credentials:'aws-lambda-cicd') {
-					s3Upload(file: rootDir + '/target/' +artifactName + '.jar',  bucket: config.lambdaConfigs.s3Bucket, path: '')
+			def fileLocation = "${rootDir}/target/${artifactName}.jar"
+				container('aws') {
+				withAWS(credentials: config.lambdaConfigs.credentialId) {
+					s3Upload(file: fileLocation, bucket: config.lambdaConfigs.s3Bucket, path: '/')
 				}
 			}
 		}
 		stage('Deploy') {
 			container('aws') {
-				sh "aws --version"
+				withAWS(credentials: credentials: config.lambdaConfigs.credentialId) {
+					sh "aws --version";
+				}
 			}
 		}
 	}
