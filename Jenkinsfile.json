@@ -1,7 +1,8 @@
 {
   "lambdaConfigs": {
     "name": "AWSLambdaCICD",
-    "s3Bucket": "AWSLambdaCICD-store"
+    "s3Bucket": "aws-lambda-cicd-store",
+    "credentialId" : "aws-lambda-cicd"
   },
   "pipeline": {
     "enabled": true

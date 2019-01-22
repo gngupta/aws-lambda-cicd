@@ -38,13 +38,15 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		stage('Build') {
 			container('maven') {
 				sh "mvn --version"
-				sh "mvn clean package -DartifactName=${config.lambdaConfigs.name}-${commitId}"
+				sh "mvn clean package -DartifactName=${config.lambdaConfigs.name}-${commitId} --batch-mode"
 			}
 		}
 
 		stage('Push') {
 			container('aws') {
-				sh "aws --version"
+				withAWS(credentials:'aws-lambda-cicd') {
+					sh "aws --version"
+				}
 			}
 		}
 
