@@ -4,6 +4,6 @@
     "s3Bucket": "AWSLambdaCICD-store"
   },
   "pipeline": {
-    "enabled": false
+    "enabled": true
   }
 }
