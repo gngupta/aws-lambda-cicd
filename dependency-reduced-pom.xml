@@ -5,7 +5,7 @@
   <artifactId>AWSLambdaCICD</artifactId>
   <version>1.0</version>
   <build>
-    <finalName>${artifactId}-${version}${commitId}</finalName>
+    <finalName>${artifactName}</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
