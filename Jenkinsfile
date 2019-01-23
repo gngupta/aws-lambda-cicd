@@ -59,8 +59,8 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		}
 
 		def lambdaAlias = 'feature'
-		if(config.lambda.alias.[env.BRANCH_NAME]){
-			lambdaAlias = config.lambda.alias.[env.BRANCH_NAME]
+		if(config.lambda.alias[env.BRANCH_NAME]) {
+			lambdaAlias = config.lambda.alias[env.BRANCH_NAME]
 		}
 
 		stage('Publish') {
