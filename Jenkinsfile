@@ -43,7 +43,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		stage('Push') {
 			container('aws') {
 				withAWS(credentials: config.lambda.credentialId) {
-					s3Upload(file: fileLocation, bucket: config.lambda.s3Bucket, path: env.BRANCH_NAME)
+					s3Upload(file: fileLocation, bucket: config.lambda.s3Bucket, path: '/' + env.BRANCH_NAME)
 				}
 			}
 		}
