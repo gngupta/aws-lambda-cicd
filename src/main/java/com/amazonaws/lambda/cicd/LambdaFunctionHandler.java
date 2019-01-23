@@ -9,6 +9,7 @@ public class LambdaFunctionHandler implements RequestHandler<String, String> {
     public String handleRequest(String input, Context context) {
     	 LambdaLogger logger = context.getLogger();
          logger.log("received : " + input);
+         input = "repsonse 1 :: " + input;
          return input.toUpperCase();
     }
 }
