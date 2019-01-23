@@ -51,7 +51,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		stage('Deploy') {
 			container('aws') {
 				withAWS(credentials: config.lambda.credentialId) {
-					sh "aws lambda update-function-code --function-name ${config.lambda.name} --s3-bucket ${env.BRANCH_NAME} --s3-key ${artifactName}.jar --region ${config.lambda.region}"
+					sh "aws lambda update-function-code --function-name ${config.lambda.name} --s3-bucket ${config.lambda.s3Bucket} --s3-key ${artifactName}.jar --region ${config.lambda.region}"
 				}
 			}
 		}
