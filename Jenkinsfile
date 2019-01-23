@@ -23,7 +23,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		def commitId = getCommitId()
 		println "rootDir :: ${rootDir} commitId :: ${commitId}"
 
-		// Read required jenkins workflow configuration values
+		// Read required jenkins workflow configuration values.
 		def pipelineUtil = load "${rootDir}/PipelineUtil.groovy"
 		def inputFile = readFile('Jenkinsfile.json')
 		def config = new groovy.json.JsonSlurperClassic().parseText(inputFile)
@@ -34,7 +34,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 			return;
 		}
 
-		def artifactName = "${config.lambdaConfigs.name}-${commitId}"
+		def artifactName = "${config.lambda.name}-${commitId}"
 		stage('Build') {
 			container('maven') {
 				sh "mvn clean package -DartifactName=${artifactName} --batch-mode"
@@ -44,16 +44,21 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		def fileLocation = "${rootDir}/target/${artifactName}.jar"
 		stage('Push') {
 			container('aws') {
-				withAWS(credentials: config.lambdaConfigs.credentialId) {
-					s3Upload(file: fileLocation, bucket: config.lambdaConfigs.s3Bucket, path: '')
+				withAWS(credentials: config.lambda.credentialId) {
+					s3Upload(file: fileLocation, bucket: config.lambda.s3Bucket, path: '')
 				}
 			}
 		}
-		
+
 		stage('Deploy') {
 			container('aws') {
-				withAWS(credentials: config.lambdaConfigs.credentialId) {
+				withAWS(credentials: config.lambda.credentialId) {
 					sh "aws --version";
+					sh "aws lambda update-function-code \
+						--function-name ${config.lambda.name} \
+                		--s3-bucket ${config.lambda.s3Bucket} \
+                		--s3-key ${artifactName}.jar \
+                		--region ${config.lambda.region}"
 				}
 			}
 		}
