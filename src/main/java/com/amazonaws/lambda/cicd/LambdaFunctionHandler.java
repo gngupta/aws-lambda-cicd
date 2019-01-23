@@ -8,8 +8,7 @@ public class LambdaFunctionHandler implements RequestHandler<String, String> {
     @Override
     public String handleRequest(String input, Context context) {
     	 LambdaLogger logger = context.getLogger();
-         logger.log("received : " + input);
-         input = "repsonse 1 :: " + input;
+         logger.log("response v1 : " + input);
          return input.toUpperCase();
     }
 }
