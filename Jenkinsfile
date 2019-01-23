@@ -24,7 +24,6 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		println "rootDir :: ${rootDir} commitId :: ${commitId}"
 
 		// Read required jenkins workflow configuration values.
-		def pipelineUtil = load "${rootDir}/PipelineUtil.groovy"
 		def inputFile = readFile('Jenkinsfile.json')
 		def config = new groovy.json.JsonSlurperClassic().parseText(inputFile)
 		println "Pipeline config ==> ${config}"
