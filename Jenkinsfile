@@ -20,8 +20,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		}
 
 		def rootDir = pwd()
-		def commitId = getCommitId()
-		println "rootDir :: ${rootDir} commitId :: ${commitId}"
+		println "rootDir :: ${rootDir}"
 
 		// Read required jenkins workflow configuration values.
 		def inputFile = readFile('Jenkinsfile.json')
@@ -33,7 +32,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 			return;
 		}
 
-		def artifactName = "${config.lambda.name}-${commitId}"
+		def artifactName = "${config.lambda.name}-${env.BUILD_NUMBER}"
 		stage('Build') {
 			container('maven') {
 				sh "mvn clean package -DartifactName=${artifactName} --batch-mode"
@@ -44,7 +43,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		stage('Push') {
 			container('aws') {
 				withAWS(credentials: config.lambda.credentialId) {
-					s3Upload(file: fileLocation, bucket: config.lambda.s3Bucket, path: '')
+					s3Upload(file: fileLocation, bucket: config.lambda.s3Bucket, path: env.BRANCH_NAME +'/')
 				}
 			}
 		}
@@ -52,12 +51,12 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		stage('Deploy') {
 			container('aws') {
 				withAWS(credentials: config.lambda.credentialId) {
-					sh "aws lambda update-function-code --function-name ${config.lambda.name} --s3-bucket ${config.lambda.s3Bucket} --s3-key ${artifactName}.jar --region ${config.lambda.region}"
+					sh "aws lambda update-function-code --function-name ${config.lambda.name} --s3-bucket ${config.lambda.s3Bucket} --s3-key ${env.BRANCH_NAME}/${artifactName}.jar --region ${config.lambda.region}"
 				}
 			}
 		}
 
-		def lambdaAlias = 'feature'
+		def lambdaAlias = config.lambda.alias.feature
 		if(config.lambda.alias[env.BRANCH_NAME]) {
 			lambdaAlias = config.lambda.alias[env.BRANCH_NAME]
 		}
