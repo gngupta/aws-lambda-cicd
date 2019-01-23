@@ -6,7 +6,7 @@
     "region": "eu-west-3",
     "alias": {
       "master": "prod",
-      "develope": "dev",
+      "develop": "dev",
       "release": "test",
       "feature" : "feature"
     }
