@@ -1,12 +1,5 @@
 #!/usr/bin/groovy
 
-def getCommitId() {
-	sh 'git rev-parse --short HEAD > .git/commitId'
-	def commitId = readFile('.git/commitId').trim()
-		sh 'rm .git/commitId'
-		return commitId
-}
-
 podTemplate(label: 'jenkins-pipeline', containers: [
 		containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:3.27-1-alpine', args: '${computer.jnlpmac} ${computer.name}', workingDir: '/home/jenkins', resourceRequestCpu: '200m', resourceLimitCpu: '300m', resourceRequestMemory: '256Mi', resourceLimitMemory: '512Mi'),
 		containerTemplate(name: 'maven', image: 'maven:3.5.2-jdk-8-alpine', command: 'cat', ttyEnabled: true),
@@ -65,7 +58,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 			container('aws') {
 				withAWS(credentials: config.lambda.credentialId) {
 					def lambdaVersion = sh (
-						script: "aws lambda publish-version --function-name ${config.lambda.name} --region ${config.lambda.region} ----description '${env.BRANCH_NAME} : ${env.BUILD_NUMBER}' | jq -r '.Version'",
+						script: "aws lambda publish-version --function-name ${config.lambda.name} --region ${config.lambda.region} --description '${env.BRANCH_NAME} : ${env.BUILD_NUMBER}' | jq -r '.Version'",
 						returnStdout: true
 					)
 					sh "aws lambda update-alias --function-name ${config.lambda.name} --name ${lambdaAlias} --region ${config.lambda.region} --function-version ${lambdaVersion}"
