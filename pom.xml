@@ -4,10 +4,15 @@
 
   <groupId>com.amazonaws.lambda</groupId>
   <artifactId>AWSLambdaCICD</artifactId>
-  <version>1.0.0</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
+  <properties>
+    <artifactName></artifactName>
+  </properties>
+
   <build>
+    <finalName>${artifactName}</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

@@ -133,4 +133,7 @@ public class TestContext implements Context {
             System.err.println(message);
         }
     }
+    
+    public TestContext() {
+	}
 }
