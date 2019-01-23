@@ -53,12 +53,24 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 		stage('Deploy') {
 			container('aws') {
 				withAWS(credentials: config.lambda.credentialId) {
-					sh "aws --version";
-					sh "aws lambda update-function-code \
-						--function-name ${config.lambda.name} \
-                		--s3-bucket ${config.lambda.s3Bucket} \
-                		--s3-key ${artifactName}.jar \
-                		--region ${config.lambda.region}"
+					sh "aws lambda update-function-code --function-name ${config.lambda.name} --s3-bucket ${config.lambda.s3Bucket} --s3-key ${artifactName}.jar --region ${config.lambda.region}"
+				}
+			}
+		}
+
+		def lambdaAlias = 'feature'
+		if(config.lambda.alias.[env.BRANCH_NAME]){
+			lambdaAlias = config.lambda.alias.[env.BRANCH_NAME]
+		}
+
+		stage('Publish') {
+			container('aws') {
+				withAWS(credentials: config.lambda.credentialId) {
+					def lambdaVersion = sh (
+						script: "aws lambda publish-version --function-name ${config.lambda.name} --region ${config.lambda.region} | jq -r '.Version'",
+						returnStdout: true
+					)
+					sh "aws lambda update-alias --function-name ${config.lambda.name} --name ${lambdaAlias} --region ${config.lambda.region} --function-version ${lambdaVersion}"
 				}
 			}
 		}
