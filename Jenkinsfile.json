@@ -5,10 +5,10 @@
     "credentialId": "aws-lambda-cicd",
     "region": "eu-west-3",
     "alias": {
-      "master": "prod",
-      "develop": "dev",
-      "release": "test",
-      "feature" : "feature"
+      "master": "PROD",
+      "develop": "DEV",
+      "release": "TEST",
+      "feature": "FEATURE"
     }
   },
   "pipeline": {
