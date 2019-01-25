@@ -54,17 +54,18 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 			lambdaAlias = config.lambda.alias[env.BRANCH_NAME]
 		}
 
+		def lambdaVersion
 		stage('Publish') {
 			container('aws') {
 				withAWS(credentials: config.lambda.credentialId) {
-					def lambdaVersion = sh (
+					lambdaVersion = sh (
 						script: "aws lambda publish-version --function-name ${config.lambda.name} --region ${config.lambda.region} --description 'branch: ${env.BRANCH_NAME}, buildNumber: ${env.BUILD_NUMBER}' | jq -r '.Version'",
 						returnStdout: true
 					)
 					sh "aws lambda update-alias --function-name ${config.lambda.name} --name ${lambdaAlias} --region ${config.lambda.region} --function-version ${lambdaVersion}"
-					currentBuild.description = "${lambdaAlias}:${lambdaVersion}"
 				}
 			}
+			currentBuild.description = "${lambdaAlias}:${lambdaVersion}"
 		}
 	}
 }
