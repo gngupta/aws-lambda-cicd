@@ -65,7 +65,7 @@ podTemplate(label: 'jenkins-pipeline', containers: [
 					sh "aws lambda update-alias --function-name ${config.lambda.name} --name ${lambdaAlias} --region ${config.lambda.region} --function-version ${lambdaVersion}"
 				}
 			}
-			currentBuild.description = "alias:${lambdaAlias} version:${lambdaVersion}"
+			currentBuild.description = "alias:${lambdaAlias}, version:${lambdaVersion}"
 		}
 	}
 }
